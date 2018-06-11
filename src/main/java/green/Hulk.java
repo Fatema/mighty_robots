@@ -1,8 +1,9 @@
 package green;
 
-import robocode.HitRobotEvent;
+import green.rage.RageMeter;
+import green.rage.RageState;
+import robocode.*;
 import robocode.Robot;
-import robocode.ScannedRobotEvent;
 
 import java.awt.*;
 
@@ -18,6 +19,7 @@ import java.awt.*;
  */
 public class Hulk extends Robot {
 
+    private RageMeter rageMeter = new RageMeter(70); // start at normal rage
     private boolean peek; // Don't turn if there's a robot there
     private double moveAmount; // How much to move
 
@@ -73,10 +75,49 @@ public class Hulk extends Robot {
     }
 
     /**
+     * onBulletHit: increase rage
+     */
+    @Override
+    public void onBulletHit(BulletHitEvent event) {
+        rageMeter.increaseRage(20);
+    }
+
+    /**
+     * onBulletMiss: decrease rage
+     */
+    @Override
+    public void onBulletMissed(BulletMissedEvent event) {
+        rageMeter.decreaseRage(5);
+    }
+
+    /**
+     * onHitByBullet: decrease rage
+     */
+    @Override
+    public void onHitByBullet(HitByBulletEvent event) {
+        rageMeter.decreaseRage(10);
+    }
+
+    /**
      * onScannedRobot:  Fire!
      */
     public void onScannedRobot(ScannedRobotEvent e) {
-        fire(2);
+        RageState rageState = rageMeter.getRageState();
+        System.out.println("Current rage state: " + rageState);
+
+        switch (rageState) {
+            case PASSIVE:
+                fire(1.0);
+                break;
+            case AVERAGE:
+                fire(2.0);
+                break;
+            case AGGRESSIVE:
+                fire(2.5);
+                break;
+            case HULKSMASH:
+                fire(3.0);
+        }
         // Note that scan is called automatically when the robot is moving.
         // By calling it manually here, we make sure we generate another scan event if there's a robot on the next
         // wall, so that we do not start moving up it until it's gone.
