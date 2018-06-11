@@ -19,7 +19,7 @@ import java.awt.*;
  */
 public class Hulk extends Robot {
 
-    private RageMeter rageMeter = new RageMeter(70); // start at normal rage
+    private RageMeter rageMeter = new RageMeter(70); // start at aggressive rage
     private boolean peek; // Don't turn if there's a robot there
     private double moveAmount; // How much to move
 
@@ -50,15 +50,35 @@ public class Hulk extends Robot {
         turnRight(90);
 
         while (true) {
-            // Look before we turn when ahead() completes.
-            peek = true;
-            // Move up the wall
-            ahead(moveAmount);
-            // Don't look now
-            peek = false;
-            // Turn to the next wall
-            turnRight(90);
+            switch (rageMeter.getRageState()) {
+                case HULKSMASH:
+                    wallsMovement();
+                    break;
+                case AGGRESSIVE:
+                    wallsMovement();
+                    break;
+                case AVERAGE:
+                    wallsMovement();
+                    break;
+                case PASSIVE:
+                    wallsMovement();
+                    break;
+                default:
+                    wallsMovement();
+                    break;
+            }
         }
+    }
+
+    private void wallsMovement() {
+        // Look before we turn when ahead() completes.
+        peek = true;
+        // Move up the wall
+        ahead(moveAmount);
+        // Don't look now
+        peek = false;
+        // Turn to the next wall
+        turnRight(90);
     }
 
     /**
