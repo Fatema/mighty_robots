@@ -4,6 +4,7 @@ import green.rage.RageMeter;
 import green.rage.RageState;
 import robocode.*;
 import robocode.Robot;
+import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 
 import java.awt.*;
@@ -113,9 +114,10 @@ public class Hulk extends Robot {
         
     	// Calculate exact location of the enemy robot
 		double absoluteBearing = getHeading() + e.getBearing();
-		double bearingFromGun = Math.abs(absoluteBearing - getGunHeading());
+		double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
+
 		
-		if (e.getDistance() > 200 || getEnergy() < 15) {
+		if (e.getDistance() > 400 || getEnergy() < 15) {
 			fire(1);
 		} else if (e.getDistance() > 50 && bearingFromGun <= 5) {
 			fire(2);
@@ -124,6 +126,7 @@ public class Hulk extends Robot {
 		} else {
 			// Take another look for good measure and shoot if better odds!
 			peek = false;
+			fire(1);
 			scan();
 		}
 
@@ -144,7 +147,8 @@ public class Hulk extends Robot {
         
     	// Calculate exact location of the enemy robot
     	double absoluteBearing = getHeading() + e.getBearing();
-    	double bearingFromGun = Math.abs(absoluteBearing - getGunHeading());
+    	double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
+
     	
     	// Initiate the preferred gun barrel rotation relative to the enemy
     	if (absoluteBearing < 0) {
@@ -196,13 +200,14 @@ public class Hulk extends Robot {
         	rageMeter.setRage(roboHealth);
         } else {
         	rageMeter.decreaseRage(10);
-        	// Shuffle escape arbitarily
-        	if (getVelocity() == 0) {
-        		moveSmallAmount *= -1;
-        		turnRight(90);
-        		ahead(moveSmallAmount);
-        	}
+        	
         }
+        // Shuffle escape arbitarily
+    	if (getVelocity() == 0) {
+    		turnRight(90);
+    		moveSmallAmount *= -1;
+    		ahead(moveSmallAmount);
+    	}
     }
 
     /**
