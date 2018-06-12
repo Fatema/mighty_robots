@@ -30,6 +30,13 @@ public class RageMeter {
             rageValue = 100;
         }
     }
+    public void setRage(int value) {
+        rageValue = value;
+
+        if (rageValue > 100) {
+            rageValue = 100;
+        }
+    }
 
     public void decreaseRage(int value) {
         rageValue -= value;
