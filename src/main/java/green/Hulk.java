@@ -2,6 +2,7 @@ package green;
 
 import green.rage.RageMeter;
 import green.rage.RageState;
+import green.rotator.Rotator;
 import robocode.*;
 import robocode.Robot;
 
@@ -20,8 +21,11 @@ import java.awt.*;
 public class Hulk extends Robot {
 
     private RageMeter rageMeter = new RageMeter(70); // start at aggressive rage
+    private Rotator rotator = new Rotator(10);
     private boolean peek; // Don't turn if there's a robot there
     private double moveAmount; // How much to move
+
+    private boolean clockwise = true;
 
     /**
      * run: Move around the walls
@@ -77,8 +81,24 @@ public class Hulk extends Robot {
         ahead(moveAmount);
         // Don't look now
         peek = false;
-        // Turn to the next wall
-        turnRight(90);
+
+        if (rotator.shouldRotate()) {
+            clockwise = !clockwise;
+            turnAround();
+            System.out.println("Turning around");
+        } else {
+            // Turn to the next wall
+            if (clockwise) {
+                turnRight(90);
+            } else {
+                turnLeft(90);
+            }
+        }
+    }
+
+    private void turnAround() {
+        turnGunRight(180);
+        turnRight(180);
     }
 
     /**
@@ -108,6 +128,21 @@ public class Hulk extends Robot {
     @Override
     public void onBulletMissed(BulletMissedEvent event) {
         rageMeter.decreaseRage(5);
+
+        RageState rageState = rageMeter.getRageState();
+        switch (rageState) {
+            case PASSIVE:
+                rotator.decrease(1.0);
+                break;
+            case AVERAGE:
+                rotator.decrease(2.0);
+                break;
+            case AGGRESSIVE:
+                rotator.decrease(2.5);
+                break;
+            case HULKSMASH:
+                rotator.decrease(3.0);
+        }
     }
 
     /**
