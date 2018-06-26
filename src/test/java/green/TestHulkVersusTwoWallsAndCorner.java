@@ -1,6 +1,7 @@
 package green;
 
 import robocode.BattleResults;
+import robocode.control.BattlefieldSpecification;
 import robocode.control.events.BattleCompletedEvent;
 import robocode.control.events.TurnEndedEvent;
 import robocode.control.testing.RobotTestBed;
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @author Philip Johnson
  */
 public class TestHulkVersusTwoWallsAndCorner extends RobotTestBed {
+    private final BattlefieldSpecification battleFieldSpec = new BattlefieldSpecification(1300, 1000);
 
     /**
      * Specifies that Two Walls and Corner and Hulk are to be matched up in this test case.
@@ -35,7 +37,7 @@ public class TestHulkVersusTwoWallsAndCorner extends RobotTestBed {
      */
     @Override
     public int getNumRounds() {
-        return 10;
+        return 100;
     }
 
     /**
@@ -50,10 +52,12 @@ public class TestHulkVersusTwoWallsAndCorner extends RobotTestBed {
         // Sanity check that results[0] is Hulk.
         BattleResults results = battleResults[0];
         String robotName = results.getTeamLeaderName();
+
         assertEquals("Check that results[0] is Hulk", "green.Hulk*", robotName);
 
         // Check to make sure Hulk won every round.
-        assertEquals("Check Hulk winner", 5, results.getFirsts());
+        assertEquals("Check Hulk winner", 54, results.getFirsts());
+
     }
 
     /**

@@ -125,24 +125,29 @@ public class Hulk extends Robot {
         RageState rageState = rageMeter.getRageState();
         System.out.println("Current rage state: " + rageState);
 
-        switch (rageState) {
-            case PASSIVE:
-                fire(1.0);
-                break;
-            case AVERAGE:
-                fire(2.0);
-                break;
-            case AGGRESSIVE:
-                fire(2.5);
-                break;
-            case HULKSMASH:
-                fire(3.0);
+        if (this.getEnergy() >= 30) {
+            switch (rageState) {
+                case PASSIVE:
+                    fire(1.0);
+                    break;
+                case AVERAGE:
+                    fire(2.0);
+                    break;
+                case AGGRESSIVE:
+                    fire(2.5);
+                    break;
+                case HULKSMASH:
+                    fire(3.0);
+            }
+            // Note that scan is called automatically when the robot is moving.
+            // By calling it manually here, we make sure we generate another scan event if there's a robot on the next
+            // wall, so that we do not start moving up it until it's gone.
+            if (peek) {
+                scan();
+            }
+        } else {
+            System.out.println("Preservation Mode Active, current Energy is below 30");
         }
-        // Note that scan is called automatically when the robot is moving.
-        // By calling it manually here, we make sure we generate another scan event if there's a robot on the next
-        // wall, so that we do not start moving up it until it's gone.
-        if (peek) {
-            scan();
-        }
+
     }
 }
