@@ -37,7 +37,7 @@ public class TestHulkVersusTwoWallsAndCorner extends RobotTestBed {
      */
     @Override
     public int getNumRounds() {
-        return 100;
+        return 10;
     }
 
     /**
@@ -55,9 +55,10 @@ public class TestHulkVersusTwoWallsAndCorner extends RobotTestBed {
 
         assertEquals("Check that results[0] is Hulk", "green.Hulk*", robotName);
 
-        // Check to make sure Hulk won every round.
-        assertEquals("Check Hulk winner", 54, results.getFirsts());
+        assertEquals("Check Hulk comes Rank first", 1, results.getRank());
 
+        // Check to make sure Hulk won every round.
+        assertEquals("Check Hulk winner", 7, results.getFirsts());
     }
 
     /**
